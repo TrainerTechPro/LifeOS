@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String?
+  createdAt     DateTime       @default(now())
+  goals         Goal[]
+  timeBlocks    TimeBlock[]
+  healthLogs    HealthLog[]
+  relationships Relationship[]
+  financeRules  FinanceRule[]
+}
+
+// System 1: Goal Setting (Quarterly Quests & Vision)
+model Goal {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  type        String    // "VISION", "QUARTERLY_QUEST", "WEEKLY"
+  status      String    @default("IN_PROGRESS") // "IN_PROGRESS", "COMPLETED"
+  targetDate  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  order       Int       @default(0)
+  parentId    String?
+  parent      Goal?     @relation("GoalHierarchy", fields: [parentId], references: [id])
+  children    Goal[]    @relation("GoalHierarchy")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+// System 2: Time Management (Time Blocking & Automation)
+model TimeBlock {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  category  String   // "DEEP_WORK", "FITNESS", "SOCIAL", "ADMIN"
+  startTime DateTime
+  endTime   DateTime
+  isRoutine Boolean  @default(false)
+  dayOfWeek Int?     // 0-6 for recurring blocks
+  color     String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, startTime])
+}
+
+// System 3: Health Operating System
+model HealthLog {
+  id           String   @id @default(uuid())
+  userId       String
+  date         DateTime @default(now())
+  sleepScore   Int?     // 1-10
+  workoutType  String?  // e.g., "Throws Practice", "Smolov Squat", "Jiu-Jitsu"
+  zone2Minutes Int?
+  calories     Int?
+  notes        String?
+  beltRank     String?
+  matTimeMin   Int?
+  liftVolume   Float?   // total volume in kg
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
+
+// System 4: Relationship CRM
+model Relationship {
+  id               String    @id @default(uuid())
+  userId           String
+  name             String
+  relationType     String    // "SPOUSE", "FAMILY", "FRIEND", "COLLEAGUE", "MENTOR"
+  birthday         DateTime?
+  lastContactDate  DateTime?
+  contactFrequency Int       // Target days between contact
+  notes            String?
+  createdAt        DateTime  @default(now())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// System 5: Financial Autopilot
+model FinanceRule {
+  id               String   @id @default(uuid())
+  userId           String
+  incomeSource     String   // e.g., "University Salary", "LLC Revenue"
+  taxPercentage    Float
+  savePercentage   Float
+  investPercentage Float
+  operationsPercentage Float @default(0)
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
