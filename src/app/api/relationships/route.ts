@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { Relationship } from "@prisma/client";
 
 const DEMO_USER_ID = "demo-user-id";
 
@@ -11,7 +12,7 @@ export async function GET() {
 
   // Add "overdue" flag
   const now = new Date();
-  const enriched = relationships.map((r) => {
+  const enriched = relationships.map((r: Relationship) => {
     const lastContact = r.lastContactDate ? new Date(r.lastContactDate) : null;
     const daysSinceContact = lastContact
       ? Math.floor((now.getTime() - lastContact.getTime()) / (1000 * 60 * 60 * 24))
