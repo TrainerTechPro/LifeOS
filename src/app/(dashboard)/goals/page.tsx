@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Dialog,
   DialogContent,
@@ -63,8 +62,8 @@ function GoalCard({ goal, onToggle }: { goal: Goal; onToggle: () => void }) {
             onClick={onToggle}
             className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
               goal.status === "COMPLETED"
-                ? "border-[#30D158] bg-[#30D158]"
-                : "border-[var(--border)] hover:border-[var(--primary)]"
+                ? "border-[var(--cyan)] bg-[var(--cyan)]"
+                : "border-[var(--border)] hover:border-[var(--violet)]"
             }`}
           >
             {goal.status === "COMPLETED" && <Check className="h-3 w-3 text-white" />}
@@ -125,12 +124,14 @@ export default function GoalsPage() {
 
   const completedQuests = quests.filter((q) => q.status === "COMPLETED").length;
   const totalQuests = quests.length;
+  const pct = totalQuests > 0 ? (completedQuests / totalQuests) * 100 : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Goals & Vision</h1>
+          <p className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-widest">System 1</p>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">Goals & Vision</h1>
           <p className="text-[var(--muted-foreground)] text-sm mt-1">
             Your 3-year vision broken into quarterly quests
           </p>
@@ -156,7 +157,7 @@ export default function GoalsPage() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Sparkles className="h-5 w-5 text-[#FFD60A]" />
+                  <Sparkles className="h-5 w-5 text-[var(--amber)]" />
                   <div>
                     <CardTitle className="text-base">3-Year Vision</CardTitle>
                     <CardDescription>Your north star directions</CardDescription>
@@ -183,7 +184,7 @@ export default function GoalsPage() {
                         key={v.id}
                         className="flex items-center gap-3 rounded-xl bg-[var(--secondary)] px-4 py-3"
                       >
-                        <div className="h-2 w-2 rounded-full bg-[#FFD60A]" />
+                        <div className="h-2 w-2 rounded-full bg-[var(--amber)]" />
                         <span className="text-sm">{v.title}</span>
                       </div>
                     ))}
@@ -201,14 +202,21 @@ export default function GoalsPage() {
                 {completedQuests}/{totalQuests} completed
               </span>
             </div>
-            <Progress value={(completedQuests / totalQuests) * 100} />
+            <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-[var(--violet)] to-[#A78BFA]"
+                initial={{ width: 0 }}
+                animate={{ width: `${pct}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              />
+            </div>
           </div>
 
           {/* Kanban Board */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#0A84FF]" />
+                <div className="h-2 w-2 rounded-full bg-[var(--violet)]" />
                 <h3 className="text-sm font-medium">In Progress</h3>
                 <Badge variant="secondary" className="text-xs">
                   {quests.filter((q) => q.status === "IN_PROGRESS").length}
@@ -231,7 +239,7 @@ export default function GoalsPage() {
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#30D158]" />
+                <div className="h-2 w-2 rounded-full bg-[var(--cyan)]" />
                 <h3 className="text-sm font-medium">Completed</h3>
                 <Badge variant="success" className="text-xs">
                   {quests.filter((q) => q.status === "COMPLETED").length}

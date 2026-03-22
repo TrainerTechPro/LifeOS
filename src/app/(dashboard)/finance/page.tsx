@@ -44,10 +44,10 @@ const demoRules: FinanceRule[] = [
 ];
 
 const bucketColors: Record<string, string> = {
-  Tax: "#FF453A",
-  Operations: "#FF9F0A",
-  Investments: "#30D158",
-  Savings: "#0A84FF",
+  Tax: "#FF6B8A",
+  Operations: "#FFB347",
+  Investments: "#06D6A0",
+  Savings: "#4DA8FF",
   "Free Spend": "#BF5AF2",
 };
 
@@ -81,7 +81,7 @@ function DonutChart({
               r={radius}
               fill="none"
               stroke={seg.color}
-              strokeWidth={24}
+              strokeWidth={28}
               strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
               strokeDashoffset={-offset}
               strokeLinecap="round"
@@ -94,7 +94,7 @@ function DonutChart({
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl font-bold">${total.toLocaleString()}</p>
+          <p className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">${total.toLocaleString()}</p>
           <p className="text-xs text-[var(--muted-foreground)]">Total</p>
         </div>
       </div>
@@ -160,10 +160,11 @@ export default function FinancePage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Financial Autopilot</h1>
+          <p className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-widest">System 5</p>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">Financial Autopilot</h1>
           <p className="text-[var(--muted-foreground)] text-sm mt-1">
             Automated money distribution rules
           </p>
@@ -202,7 +203,7 @@ export default function FinancePage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Calculator className="h-5 w-5 text-[var(--primary)]" />
+              <Calculator className="h-5 w-5 text-[var(--violet)]" />
               <CardTitle className="text-base">Paycheck Calculator</CardTitle>
             </div>
             <CardDescription>
@@ -237,7 +238,7 @@ export default function FinancePage() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center justify-between rounded-xl bg-[var(--secondary)] px-4 py-3"
+                    className="flex items-center justify-between rounded-xl bg-white/[0.03] border border-[var(--border)] px-4 py-3"
                   >
                     <div className="flex items-center gap-3">
                       <div
@@ -302,7 +303,7 @@ export default function FinancePage() {
           {rules.map((rule) => (
             <div
               key={rule.id}
-              className="flex items-center justify-between rounded-xl bg-[var(--secondary)] px-4 py-3"
+              className="flex items-center justify-between rounded-xl bg-white/[0.03] border border-[var(--border)] px-4 py-3"
             >
               <div>
                 <p className="text-sm font-medium">{rule.incomeSource}</p>

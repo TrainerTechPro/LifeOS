@@ -52,10 +52,10 @@ const relationTypeLabels: Record<string, string> = {
 };
 
 const relationTypeColors: Record<string, string> = {
-  SPOUSE: "#FF375F",
-  FAMILY: "#FF9F0A",
-  FRIEND: "#30D158",
-  COLLEAGUE: "#5E5CE6",
+  SPOUSE: "#FF6B8A",
+  FAMILY: "#FFB347",
+  FRIEND: "#06D6A0",
+  COLLEAGUE: "#7C5CFC",
   MENTOR: "#BF5AF2",
 };
 
@@ -117,10 +117,13 @@ export default function RelationshipsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Relationship CRM</h1>
+          <p className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-widest">System 4</p>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-[var(--rose)] to-[var(--violet)] bg-clip-text text-transparent">
+            Relationship CRM
+          </h1>
           <p className="text-[var(--muted-foreground)] text-sm mt-1">
             Never lose touch with the people who matter
           </p>
@@ -137,9 +140,9 @@ export default function RelationshipsPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="border-[#FF9F0A]/30 bg-[#FF9F0A]/5">
+          <Card className="border-[var(--amber)]/20 bg-[var(--amber)]/5">
             <CardContent className="p-4 flex items-center gap-3">
-              <Bell className="h-5 w-5 text-[#FF9F0A]" />
+              <Bell className="h-5 w-5 text-[var(--amber)]" />
               <div>
                 <p className="text-sm font-medium">
                   {overdueCount} {overdueCount === 1 ? "person needs" : "people need"} a check-in
@@ -182,10 +185,10 @@ export default function RelationshipsPage() {
               exit={{ opacity: 0 }}
               transition={{ delay: i * 0.03 }}
             >
-              <Card className={contact.isOverdue ? "border-[#FF9F0A]/20" : ""}>
+              <Card className={`${contact.isOverdue ? "border-[var(--amber)]/20 border-l-2 border-l-[var(--amber)]" : ""}`}>
                 <CardContent className="p-4 flex items-center gap-4">
                   <div
-                    className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white"
                     style={{ backgroundColor: relationTypeColors[contact.relationType] || "#98989D" }}
                   >
                     {contact.name.charAt(0)}

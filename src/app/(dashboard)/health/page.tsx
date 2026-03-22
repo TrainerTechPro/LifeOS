@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Dialog,
   DialogContent,
@@ -55,13 +54,72 @@ const liftingProtocol = [
 
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 500, damping: 35 } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 28 } },
 };
+
+function ProgressRing({
+  value,
+  size = 56,
+  strokeWidth = 4,
+  color,
+  children,
+}: {
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+  color: string;
+  children?: React.ReactNode;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.min(value, 100) / 100) * circumference;
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth={strokeWidth}
+        />
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function getWorkoutAccentColor(workoutType: string): string {
+  const lower = workoutType.toLowerCase();
+  if (lower.includes("jiu-jitsu") || lower.includes("mat")) return "var(--rose)";
+  if (lower.includes("smolov") || lower.includes("squat") || lower.includes("lift") || lower.includes("upper")) return "var(--violet)";
+  if (lower.includes("zone 2") || lower.includes("cardio")) return "var(--cyan)";
+  if (lower.includes("throws")) return "var(--amber)";
+  if (lower.includes("rest")) return "var(--muted-foreground)";
+  return "var(--blue)";
+}
 
 function MetricCard({
   icon: Icon,
@@ -80,32 +138,42 @@ function MetricCard({
   target?: number;
   current?: number;
 }) {
+  const ringValue = target && current !== undefined ? (current / target) * 100 : undefined;
+
   return (
     <motion.div variants={item}>
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-xl"
-              style={{ backgroundColor: `${color}20` }}
-            >
-              <Icon className="h-5 w-5" style={{ color }} />
-            </div>
-            <div className="flex-1">
-              <p className="text-xs text-[var(--muted-foreground)]">{label}</p>
-              <p className="text-xl font-bold">
+      <Card className="gradient-border shadow-inner-glow">
+        <CardContent className="p-5">
+          <div className="flex items-center gap-4">
+            {ringValue !== undefined ? (
+              <ProgressRing value={ringValue} size={52} strokeWidth={4} color={color}>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-lg"
+                  style={{ backgroundColor: `${color}15` }}
+                >
+                  <Icon className="h-4 w-4" style={{ color }} />
+                </div>
+              </ProgressRing>
+            ) : (
+              <div
+                className="flex h-11 w-11 items-center justify-center rounded-xl"
+                style={{ backgroundColor: `${color}15` }}
+              >
+                <Icon className="h-5 w-5" style={{ color }} />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-[var(--muted-foreground)] uppercase tracking-wide">{label}</p>
+              <p className="text-2xl font-bold tracking-tight">
                 {value}
                 {unit && <span className="text-sm font-normal text-[var(--muted-foreground)] ml-1">{unit}</span>}
               </p>
             </div>
           </div>
           {target && current !== undefined && (
-            <div className="mt-3">
-              <Progress value={(current / target) * 100} />
-              <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                {current}/{target} {unit} this week
-              </p>
-            </div>
+            <p className="text-xs text-[var(--muted-foreground)] mt-3 pl-1">
+              {current}/{target} {unit} this week &middot; {Math.round((current / target) * 100)}%
+            </p>
           )}
         </CardContent>
       </Card>
@@ -149,16 +217,20 @@ export default function HealthPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Health OS</h1>
+          <p className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-widest">System 3</p>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent mt-1">
+            Health OS
+          </h1>
           <p className="text-[var(--muted-foreground)] text-sm mt-1">
             Track your body like an engineering system
           </p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button onClick={() => setShowAddDialog(true)} className="gap-2">
+          <Plus className="h-4 w-4" />
           Log Today
         </Button>
       </div>
@@ -171,9 +243,9 @@ export default function HealthPage() {
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         <MetricCard icon={Moon} label="Avg Sleep Score" value={avgSleep} unit="/10" color="#BF5AF2" />
-        <MetricCard icon={Timer} label="Zone 2 This Week" value={String(totalZone2)} unit="min" color="#30D158" target={150} current={totalZone2} />
-        <MetricCard icon={Dumbbell} label="Mat Time This Week" value={String(totalMatTime)} unit="min" color="#FF453A" target={180} current={totalMatTime} />
-        <MetricCard icon={Flame} label="Avg Calories" value={String(avgCalories)} unit="kcal" color="#FF9F0A" />
+        <MetricCard icon={Timer} label="Zone 2 This Week" value={String(totalZone2)} unit="min" color="var(--cyan)" target={150} current={totalZone2} />
+        <MetricCard icon={Dumbbell} label="Mat Time This Week" value={String(totalMatTime)} unit="min" color="var(--rose)" target={180} current={totalMatTime} />
+        <MetricCard icon={Flame} label="Avg Calories" value={String(avgCalories)} unit="kcal" color="var(--amber)" />
       </motion.div>
 
       <Tabs defaultValue="log" className="space-y-6">
@@ -183,64 +255,73 @@ export default function HealthPage() {
         </TabsList>
 
         <TabsContent value="log" className="space-y-3">
-          {logs.map((log, i) => (
-            <motion.div
-              key={log.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-            >
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-sm">{log.workoutType}</p>
-                        {log.beltRank && (
-                          <Badge variant="outline" className="text-xs">{log.beltRank} Belt</Badge>
-                        )}
+          {logs.map((log, i) => {
+            const accentColor = getWorkoutAccentColor(log.workoutType);
+            return (
+              <motion.div
+                key={log.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03 }}
+              >
+                <Card className="gradient-border shadow-inner-glow overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="flex">
+                      <div
+                        className="w-1 shrink-0 rounded-l-xl"
+                        style={{ backgroundColor: accentColor }}
+                      />
+                      <div className="flex items-center justify-between flex-1 p-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-sm">{log.workoutType}</p>
+                            {log.beltRank && (
+                              <Badge variant="outline" className="text-xs">{log.beltRank} Belt</Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-[var(--muted-foreground)]">
+                            {new Date(log.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                          </p>
+                        </div>
+                        <div className="flex gap-4 text-right">
+                          <div>
+                            <p className="text-xs text-[var(--muted-foreground)]">Sleep</p>
+                            <p className="text-sm font-semibold">{log.sleepScore}/10</p>
+                          </div>
+                          {log.zone2Minutes > 0 && (
+                            <div>
+                              <p className="text-xs text-[var(--muted-foreground)]">Zone 2</p>
+                              <p className="text-sm font-semibold" style={{ color: "var(--cyan)" }}>{log.zone2Minutes}m</p>
+                            </div>
+                          )}
+                          {log.matTimeMin && (
+                            <div>
+                              <p className="text-xs text-[var(--muted-foreground)]">Mat</p>
+                              <p className="text-sm font-semibold" style={{ color: "var(--rose)" }}>{log.matTimeMin}m</p>
+                            </div>
+                          )}
+                          {log.liftVolume && (
+                            <div>
+                              <p className="text-xs text-[var(--muted-foreground)]">Volume</p>
+                              <p className="text-sm font-semibold" style={{ color: "var(--violet)" }}>{(log.liftVolume / 1000).toFixed(1)}k</p>
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-xs text-[var(--muted-foreground)]">Cal</p>
+                            <p className="text-sm font-semibold" style={{ color: "var(--amber)" }}>{log.calories}</p>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-xs text-[var(--muted-foreground)]">
-                        {new Date(log.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
-                      </p>
                     </div>
-                    <div className="flex gap-4 text-right">
-                      <div>
-                        <p className="text-xs text-[var(--muted-foreground)]">Sleep</p>
-                        <p className="text-sm font-semibold">{log.sleepScore}/10</p>
-                      </div>
-                      {log.zone2Minutes > 0 && (
-                        <div>
-                          <p className="text-xs text-[var(--muted-foreground)]">Zone 2</p>
-                          <p className="text-sm font-semibold">{log.zone2Minutes}m</p>
-                        </div>
-                      )}
-                      {log.matTimeMin && (
-                        <div>
-                          <p className="text-xs text-[var(--muted-foreground)]">Mat</p>
-                          <p className="text-sm font-semibold">{log.matTimeMin}m</p>
-                        </div>
-                      )}
-                      {log.liftVolume && (
-                        <div>
-                          <p className="text-xs text-[var(--muted-foreground)]">Volume</p>
-                          <p className="text-sm font-semibold">{(log.liftVolume / 1000).toFixed(1)}k</p>
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-xs text-[var(--muted-foreground)]">Cal</p>
-                        <p className="text-sm font-semibold">{log.calories}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </TabsContent>
 
         <TabsContent value="protocol" className="space-y-4">
-          <Card>
+          <Card className="gradient-border shadow-inner-glow">
             <CardHeader>
               <CardTitle className="text-base">Smolov Squat Cycle</CardTitle>
               <CardDescription>3x/week lifting protocol - Current: Week 3</CardDescription>
@@ -249,7 +330,7 @@ export default function HealthPage() {
               {liftingProtocol.map((p) => (
                 <div
                   key={p.day}
-                  className="flex items-center justify-between rounded-xl bg-[var(--secondary)] px-4 py-3"
+                  className="flex items-center justify-between rounded-xl border border-[rgba(255,255,255,0.06)] bg-white/[0.02] px-4 py-3"
                 >
                   <div>
                     <p className="text-sm font-medium">{p.day}</p>
@@ -261,16 +342,30 @@ export default function HealthPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="gradient-border shadow-inner-glow">
             <CardHeader>
               <CardTitle className="text-base">Zone 2 Cardio Minimums</CardTitle>
               <CardDescription>150 min/week target for aerobic base</CardDescription>
             </CardHeader>
             <CardContent>
-              <Progress value={(totalZone2 / 150) * 100} />
-              <p className="text-sm text-[var(--muted-foreground)] mt-2">
-                {totalZone2}/150 minutes this week ({Math.round((totalZone2 / 150) * 100)}%)
-              </p>
+              <div className="flex items-center gap-5">
+                <ProgressRing
+                  value={(totalZone2 / 150) * 100}
+                  size={72}
+                  strokeWidth={5}
+                  color="var(--cyan)"
+                >
+                  <span className="text-sm font-bold">{Math.round((totalZone2 / 150) * 100)}%</span>
+                </ProgressRing>
+                <div>
+                  <p className="text-2xl font-bold tracking-tight">
+                    {totalZone2}<span className="text-sm font-normal text-[var(--muted-foreground)] ml-1">/ 150 min</span>
+                  </p>
+                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                    {150 - totalZone2 > 0 ? `${150 - totalZone2} minutes remaining this week` : "Weekly target reached"}
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

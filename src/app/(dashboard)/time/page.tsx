@@ -33,10 +33,10 @@ interface TimeBlock {
 }
 
 const categoryColors: Record<string, string> = {
-  DEEP_WORK: "#5E5CE6",
-  FITNESS: "#30D158",
-  SOCIAL: "#FF9F0A",
-  ADMIN: "#98989D",
+  DEEP_WORK: "#7C5CFC",
+  FITNESS: "#06D6A0",
+  SOCIAL: "#FFB347",
+  ADMIN: "#6B6B80",
 };
 
 const categoryLabels: Record<string, string> = {
@@ -50,26 +50,26 @@ const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hours = Array.from({ length: 16 }, (_, i) => i + 6); // 6AM to 9PM
 
 const demoBlocks: TimeBlock[] = [
-  { id: "1", title: "Kinesiology Lecture Prep", category: "DEEP_WORK", startHour: 7, endHour: 9, dayOfWeek: 0, color: "#5E5CE6" },
-  { id: "2", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 0, color: "#5E5CE6" },
-  { id: "3", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 0, color: "#30D158" },
-  { id: "4", title: "Research Writing", category: "DEEP_WORK", startHour: 9, endHour: 12, dayOfWeek: 1, color: "#5E5CE6" },
-  { id: "5", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 1, color: "#5E5CE6" },
-  { id: "6", title: "Jiu-Jitsu", category: "FITNESS", startHour: 18, endHour: 19.5, dayOfWeek: 1, color: "#30D158" },
-  { id: "7", title: "Kinesiology Lecture", category: "DEEP_WORK", startHour: 8, endHour: 10, dayOfWeek: 2, color: "#5E5CE6" },
-  { id: "8", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 2, color: "#5E5CE6" },
-  { id: "9", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 2, color: "#30D158" },
-  { id: "10", title: "Zone 2 Cardio", category: "FITNESS", startHour: 7, endHour: 7.75, dayOfWeek: 3, color: "#30D158" },
-  { id: "11", title: "Admin & Email", category: "ADMIN", startHour: 9, endHour: 10, dayOfWeek: 3, color: "#98989D" },
-  { id: "12", title: "Recruit Calls", category: "SOCIAL", startHour: 10, endHour: 12, dayOfWeek: 3, color: "#FF9F0A" },
-  { id: "13", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 3, color: "#5E5CE6" },
-  { id: "14", title: "Jiu-Jitsu", category: "FITNESS", startHour: 18, endHour: 19.5, dayOfWeek: 3, color: "#30D158" },
-  { id: "15", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 4, color: "#30D158" },
-  { id: "16", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 4, color: "#5E5CE6" },
-  { id: "17", title: "Throws Practice", category: "FITNESS", startHour: 8, endHour: 10, dayOfWeek: 5, color: "#30D158" },
-  { id: "18", title: "Family Time", category: "SOCIAL", startHour: 12, endHour: 17, dayOfWeek: 5, color: "#FF9F0A" },
-  { id: "19", title: "Jiu-Jitsu Open Mat", category: "FITNESS", startHour: 10, endHour: 12, dayOfWeek: 6, color: "#30D158" },
-  { id: "20", title: "Weekly Review", category: "ADMIN", startHour: 17, endHour: 18, dayOfWeek: 6, color: "#98989D" },
+  { id: "1", title: "Kinesiology Lecture Prep", category: "DEEP_WORK", startHour: 7, endHour: 9, dayOfWeek: 0, color: "#7C5CFC" },
+  { id: "2", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 0, color: "#7C5CFC" },
+  { id: "3", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 0, color: "#06D6A0" },
+  { id: "4", title: "Research Writing", category: "DEEP_WORK", startHour: 9, endHour: 12, dayOfWeek: 1, color: "#7C5CFC" },
+  { id: "5", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 1, color: "#7C5CFC" },
+  { id: "6", title: "Jiu-Jitsu", category: "FITNESS", startHour: 18, endHour: 19.5, dayOfWeek: 1, color: "#06D6A0" },
+  { id: "7", title: "Kinesiology Lecture", category: "DEEP_WORK", startHour: 8, endHour: 10, dayOfWeek: 2, color: "#7C5CFC" },
+  { id: "8", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 2, color: "#7C5CFC" },
+  { id: "9", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 2, color: "#06D6A0" },
+  { id: "10", title: "Zone 2 Cardio", category: "FITNESS", startHour: 7, endHour: 7.75, dayOfWeek: 3, color: "#06D6A0" },
+  { id: "11", title: "Admin & Email", category: "ADMIN", startHour: 9, endHour: 10, dayOfWeek: 3, color: "#6B6B80" },
+  { id: "12", title: "Recruit Calls", category: "SOCIAL", startHour: 10, endHour: 12, dayOfWeek: 3, color: "#FFB347" },
+  { id: "13", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 3, color: "#7C5CFC" },
+  { id: "14", title: "Jiu-Jitsu", category: "FITNESS", startHour: 18, endHour: 19.5, dayOfWeek: 3, color: "#06D6A0" },
+  { id: "15", title: "Strength Training", category: "FITNESS", startHour: 6, endHour: 7.5, dayOfWeek: 4, color: "#06D6A0" },
+  { id: "16", title: "D1 Team Coaching", category: "DEEP_WORK", startHour: 14, endHour: 17, dayOfWeek: 4, color: "#7C5CFC" },
+  { id: "17", title: "Throws Practice", category: "FITNESS", startHour: 8, endHour: 10, dayOfWeek: 5, color: "#06D6A0" },
+  { id: "18", title: "Family Time", category: "SOCIAL", startHour: 12, endHour: 17, dayOfWeek: 5, color: "#FFB347" },
+  { id: "19", title: "Jiu-Jitsu Open Mat", category: "FITNESS", startHour: 10, endHour: 12, dayOfWeek: 6, color: "#06D6A0" },
+  { id: "20", title: "Weekly Review", category: "ADMIN", startHour: 17, endHour: 18, dayOfWeek: 6, color: "#6B6B80" },
 ];
 
 export default function TimePage() {
@@ -103,7 +103,7 @@ export default function TimePage() {
     const block: TimeBlock = {
       id: crypto.randomUUID(),
       ...newBlock,
-      color: categoryColors[newBlock.category] || "#98989D",
+      color: categoryColors[newBlock.category] || "#6B6B80",
     };
     setBlocks([...blocks, block]);
     setNewBlock({ title: "", category: "DEEP_WORK", startHour: 9, endHour: 10, dayOfWeek: 0 });
@@ -111,10 +111,13 @@ export default function TimePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Time Management</h1>
+          <p className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-widest">System 2</p>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            Time Management
+          </h1>
           <p className="text-[var(--muted-foreground)] text-sm mt-1">
             Weekly time blocking calendar
           </p>
@@ -132,9 +135,12 @@ export default function TimePage() {
       </div>
 
       {/* Category Summary */}
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         {Object.entries(categoryStats).map(([cat, hrs]) => (
-          <div key={cat} className="flex items-center gap-2">
+          <div
+            key={cat}
+            className="flex items-center gap-2 rounded-lg bg-white/[0.03] px-3 py-2"
+          >
             <div
               className="h-3 w-3 rounded-full"
               style={{ backgroundColor: categoryColors[cat] }}
@@ -157,11 +163,11 @@ export default function TimePage() {
             }}
           >
             {/* Header */}
-            <div className="border-b border-r border-[var(--border)] p-2" />
-            {days.map((day, i) => (
+            <div className="border-b border-r border-white/[0.04] bg-white/[0.02] p-2" />
+            {days.map((day) => (
               <div
                 key={day}
-                className="border-b border-r border-[var(--border)] p-2 text-center text-sm font-medium"
+                className="border-b border-r border-white/[0.04] bg-white/[0.02] p-2 text-center text-sm font-medium"
               >
                 {day}
               </div>
@@ -172,14 +178,14 @@ export default function TimePage() {
               <>
                 <div
                   key={`hour-${hour}`}
-                  className="border-b border-r border-[var(--border)] p-1 text-xs text-[var(--muted-foreground)] text-right pr-2 flex items-center justify-end"
+                  className="border-b border-r border-white/[0.04] p-1 text-xs text-[var(--muted-foreground)] text-right pr-2 flex items-center justify-end"
                 >
                   {hour % 12 || 12}{hour >= 12 ? "p" : "a"}
                 </div>
                 {days.map((_, dayIdx) => (
                   <div
                     key={`cell-${hour}-${dayIdx}`}
-                    className="relative border-b border-r border-[var(--border)]"
+                    className="relative border-b border-r border-white/[0.04]"
                   />
                 ))}
               </>
@@ -200,7 +206,7 @@ export default function TimePage() {
                   style={{
                     gridColumn: col,
                     gridRow: `${topRow + 1} / span ${Math.ceil(height)}`,
-                    backgroundColor: `${block.color}30`,
+                    backgroundColor: `${block.color}18`,
                     borderLeft: `3px solid ${block.color}`,
                     color: block.color,
                     position: "relative",
