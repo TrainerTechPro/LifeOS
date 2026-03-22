@@ -244,20 +244,19 @@ export default function HealthPage() {
 
   const weeklyZone2Data = useMemo(() => {
     const sorted = [...logs].sort((a, b) => a.date.localeCompare(b.date));
-    const weeks: Record<string, number> = {};
-    sorted.forEach((l) => {
-      const d = new Date(l.date);
-      const weekStart = new Date(d);
-      weekStart.setDate(d.getDate() - d.getDay());
-      const key = weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      weeks[key] = (weeks[key] || 0) + l.zone2Minutes;
-    });
-    return Object.entries(weeks).map(([week, minutes]) => ({ week, minutes }));
+    const last7 = sorted.slice(-7);
+    return last7
+      .filter((l) => l.zone2Minutes > 0)
+      .map((l) => ({
+        day: new Date(l.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
+        minutes: l.zone2Minutes,
+      }));
   }, [logs]);
 
   const liftVolumeData = useMemo(() => {
     const sorted = [...logs].sort((a, b) => a.date.localeCompare(b.date));
     return sorted
+      .slice(-14)
       .filter((l) => l.liftVolume && l.liftVolume > 0)
       .map((l) => ({
         date: new Date(l.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
@@ -500,12 +499,12 @@ export default function HealthPage() {
             </CardContent>
           </Card>
 
-          {/* Weekly Zone 2 */}
+          {/* Zone 2 (Last 7 Days) */}
           <Card className="gradient-border shadow-inner-glow">
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <Timer className="h-4 w-4" style={{ color: "#00D4FF" }} />
-                Weekly Zone 2 Progress
+                Zone 2 (Last 7 Days)
               </CardTitle>
               <CardDescription>150 min/week target for aerobic base building</CardDescription>
             </CardHeader>
@@ -514,7 +513,7 @@ export default function HealthPage() {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={weeklyZone2Data}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                    <XAxis dataKey="week" {...axisProps} />
+                    <XAxis dataKey="day" {...axisProps} />
                     <YAxis {...axisProps} />
                     <Tooltip
                       contentStyle={tooltipStyle}
