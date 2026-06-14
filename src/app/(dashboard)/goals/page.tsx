@@ -49,6 +49,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useGoalStore, type Goal, type GoalType } from "@/stores/goals";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 /* ------------------------------------------------------------------ */
 /*  Sortable Goal Card                                                 */
@@ -249,6 +251,7 @@ function SortableGoalList({
 export default function GoalsPage() {
   const { goals, addGoal, updateGoal, removeGoal, reorderGoals } =
     useGoalStore();
+  const { toast } = useToast();
 
   /* ----- Derived data ----- */
   const visionGoals = useMemo(
@@ -385,7 +388,21 @@ export default function GoalsPage() {
   };
 
   const handleDelete = (id: string) => {
+    const deleted = goals.find((g) => g.id === id);
     removeGoal(id);
+    if (!deleted) return;
+
+    // User Control & Freedom: deletion is reversible via an undo snackbar
+    // rather than a blocking confirm dialog — the mobile-friendly pattern.
+    toast({
+      title: "Goal deleted",
+      description: deleted.title,
+      action: (
+        <ToastAction altText="Undo delete" onClick={() => addGoal(deleted)}>
+          Undo
+        </ToastAction>
+      ),
+    });
   };
 
   /* ----- Drag end: reorder within a filtered list ----- */
