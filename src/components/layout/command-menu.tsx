@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+import { useCommandMenu } from "@/stores/command-menu";
 import { useGoalStore } from "@/stores/goals";
 import { useHealthStore } from "@/stores/health";
 import { useTimeBlockStore } from "@/stores/time-blocks";
@@ -112,7 +113,11 @@ function formatBlockCategory(t: string): string {
 /* ------------------------------------------------------------------ */
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+  // Open-state lives in a store so the mobile bottom-bar "+" can open it too;
+  // ⌘/Ctrl-K still toggles on desktop.
+  const open = useCommandMenu((s) => s.open);
+  const setOpen = useCommandMenu((s) => s.setOpen);
+  const toggle = useCommandMenu((s) => s.toggle);
   const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
@@ -129,12 +134,12 @@ export function CommandMenu() {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((o) => !o);
+        toggle();
       }
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [toggle]);
 
   // Reset state when dialog opens/closes
   useEffect(() => {

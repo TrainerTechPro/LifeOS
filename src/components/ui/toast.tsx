@@ -14,7 +14,9 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      // Mobile: float above the 64px bottom nav so undo snackbars stay tappable.
+      // Desktop (sm+): pin to bottom-right.
+      "fixed inset-x-0 bottom-20 z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:bottom-0 sm:left-auto sm:right-0 sm:flex-col md:max-w-[420px]",
       className
     )}
     {...props}
@@ -36,6 +38,22 @@ const Toast = React.forwardRef<
   />
 ));
 Toast.displayName = ToastPrimitives.Root.displayName;
+
+const ToastAction = React.forwardRef<
+  React.ComponentRef<typeof ToastPrimitives.Action>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Action
+    ref={ref}
+    className={cn(
+      // 36px tall, generous hit area for thumbs
+      "inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-white/[0.04] px-3 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[var(--ring)]",
+      className
+    )}
+    {...props}
+  />
+));
+ToastAction.displayName = ToastPrimitives.Action.displayName;
 
 const ToastClose = React.forwardRef<
   React.ComponentRef<typeof ToastPrimitives.Close>,
@@ -68,4 +86,17 @@ const ToastDescription = React.forwardRef<
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
-export { ToastProvider, ToastViewport, Toast, ToastClose, ToastTitle, ToastDescription };
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+type ToastActionElement = React.ReactElement<typeof ToastAction>;
+
+export {
+  type ToastProps,
+  type ToastActionElement,
+  ToastProvider,
+  ToastViewport,
+  Toast,
+  ToastAction,
+  ToastClose,
+  ToastTitle,
+  ToastDescription,
+};
